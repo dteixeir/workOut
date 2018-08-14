@@ -1,0 +1,20 @@
+<mat-toolbar color="primary">
+  <div fxHide.gt-xs>
+    <button 
+      mat-icon-button
+      ngModel
+    >
+      <mat-icon (click)="onEmit()">menu</mat-icon>
+    </button>
+  </div>
+  <div class="links">
+      <a routerLink="/">NG Fitness</a>
+  </div>
+  <div fxFlex fxLayout fxLayoutAlign="flex-end" class="links" fxHide.xs>
+    <ul fxLayout="row" fxLayoutGap=".5em" class="navigation-items" >
+      <li *ngFor="let route of routes" >
+        <a *ngIf="route.showIfAuthenticated === (isAuthenticated$ | async) || route.dontShowIfAuthenticated === !(isAuthenticated$ | async)" routerLink="{{ route.url }}">{{route.name}}</a>
+      </li>
+    </ul>
+  </div>
+</mat-toolbar>

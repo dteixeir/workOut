@@ -1,0 +1,8 @@
+<mat-nav-list>
+  <ng-container *ngFor="let route of routes">
+    <a mat-list-item *ngIf="route.showIfAuthenticated === (isAuthenticated$ | async) || route.dontShowIfAuthenticated === !(isAuthenticated$ | async)" routerLink="{{route.url}}" (click)="onEmit()">
+        <mat-icon>{{route.iconName}}</mat-icon>
+        <span class="nav-caption">{{route.name}}</span>
+    </a>
+  </ng-container>
+</mat-nav-list>

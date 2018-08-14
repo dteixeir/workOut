@@ -1,0 +1,9 @@
+$accent: #ff4081;
+$primary: #3f51b5;
+
+// use this to generate all padding classes
+@mixin padding($value) {
+  .padding-#{$value} {
+    padding: $value
+  }
+}

@@ -1,0 +1,6 @@
+<section class="card" fxLayout="column" fxLayoutAlign="center center">
+  <mat-progress-spinner mode="determinate" [value]="progress"></mat-progress-spinner>
+  <h1>Progress {{progress}}%</h1>
+  <p>Keep Chugging!</p>
+  <button mat-raised-button color="accent" (click)="buttonClick()">{{ buttonText }}</button>
+</section>

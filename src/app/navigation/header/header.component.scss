@@ -1,0 +1,18 @@
+@import "./../../../stylesVariables.scss";
+
+.links {
+  a {
+    text-decoration: none;
+    color: white;
+    &:active,
+    &:hover {
+      color: $accent;
+    }
+  }
+
+  .navigation-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+}
