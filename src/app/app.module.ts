@@ -25,6 +25,7 @@ import { TrainingService } from './training/training.service';
 import { ModalModule } from './modals/modal.module';
 
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { UserModule, UserService } from './user/user.module';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
   ],
   imports: [
     AppRoutingModule,
+    UserModule,
     AuthModule,
     BrowserAnimationsModule,
     BrowserModule,
@@ -48,7 +50,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     AngularFirestoreModule,
     AngularFireModule.initializeApp(environment.firebase)
   ],
-  providers: [ UIService, TrainingService, AuthService ],
+  providers: [ UIService, TrainingService, AuthService, UserService ],
   bootstrap: [ AppComponent ],
   entryComponents: [
 

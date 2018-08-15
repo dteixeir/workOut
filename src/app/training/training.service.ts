@@ -1,55 +1,53 @@
-import { map, last, take } from 'rxjs/operators';
+import { map, take, takeUntil } from 'rxjs/operators';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AppCollections } from './../app.constants';
 
 import { Excersize } from './excersize.model';
-import { Subject, Subscription } from 'rxjs';
-import 'core-js/es6/reflect';
-import 'core-js/es7/reflect';
 import { Injectable } from '@angular/core';
 import { UIService } from '../shared/ui.service';
 import { Store } from '@ngrx/store';
 import * as fromTraining from './training.reducer';
+import * as fromRoot from '../app.reducer';
 import * as TrainingActions from './training.actions';
 import * as UiActions from '../shared/ui.actions';
+import { BaseService } from '../shared/shared.module';
 
 @Injectable()
-export class TrainingService {
-  private _fbSubscriptions: Subscription[] = [];
-
+export class TrainingService extends BaseService {
   constructor(
     private db: AngularFirestore,
-    private uiService: UIService,
-    private store: Store<fromTraining.State>
-  ) { }
+    protected uiService: UIService,
+    protected store: Store<fromTraining.State>
+  ) {
+    super(
+      uiService,
+      store
+    );
+
+    this.baseInit();
+  }
 
   fetchAvailableExcersizes() {
     this.store.dispatch(new UiActions.StartLoading());
 
-    const subscription: Subscription = this.db.collection(AppCollections.AVAILABLE_EXCERSIZES)
+    this.db.collection(AppCollections.AVAILABLE_EXCERSIZES)
       .snapshotChanges()
       .pipe(
-      map(data => {
-        // throw new Error();
+        map(data => {
+          // throw new Error();
           return data.map(doc => {
             return {
               id: doc.payload.doc.id,
               ...doc.payload.doc.data()
             } as Excersize;
           }) as Excersize[];
-        })
-      )
-      .subscribe(
+        }),
+        takeUntil(this.isAuth$)
+      ).subscribe(
         (excersizes: Excersize[]) => {
           this.store.dispatch(new UiActions.StopLoading());
           this.store.dispatch(new TrainingActions.SetAvailableTraining(excersizes));
-        },
-        (error) => {
-          this.store.dispatch(new UiActions.StopLoading());
-          this.uiService.showSnackBar('Fetching available excersizes failed', null);
-        });
-
-    this._fbSubscriptions.push(subscription);
+        }, (error) => this.baseError(error, 'Fetching available excersizes failed'));
   }
 
   startExcersize(excersize: Excersize): void {
@@ -65,7 +63,7 @@ export class TrainingService {
           date: new Date(),
           state: 'completed'
         });
-    });
+      }, (error) => this.baseError(error));
 
     this.store.dispatch(new TrainingActions.StopTraining());
   }
@@ -83,31 +81,34 @@ export class TrainingService {
         });
 
         this.store.dispatch(new TrainingActions.StopTraining());
-      });
+      }, (error) => this.baseError(error));
   }
 
   getFinishedExcersizes() {
     this.store.dispatch(new UiActions.StartLoading());
-    const subscription: Subscription = this.db.collection(AppCollections.FINISHED_EXCERSIZES)
-      .valueChanges()
-      .subscribe(
-        (excersizes: Excersize[]) => {
-          this.store.dispatch(new TrainingActions.SetFinishedTraining(excersizes));
-          this.store.dispatch(new UiActions.StopLoading());        },
-        (error) => {
-          this.store.dispatch(new UiActions.StopLoading());
-          this.uiService.showSnackBar('Unable to fetch Finished Excersizes', null);
-        }
-      );
 
-    this._fbSubscriptions.push(subscription);
+    this.store.select(fromRoot.getUser)
+      .pipe(take(1))
+      .subscribe(user => {
+        this.db.doc(`users/${user.userId}`).collection(AppCollections.FINISHED_EXCERSIZES)
+          .valueChanges()
+          .pipe(takeUntil(this.isAuth$))
+          .subscribe((excersizes: Excersize[]) => {
+            this.store.dispatch(new TrainingActions.SetFinishedTraining(excersizes));
+            this.store.dispatch(new UiActions.StopLoading());
+          }, (error) => {
+            this.baseError(error, 'Unable to fetch Finished Excersizes');
+          });
+      }, (error) => this.baseError(error));
   }
 
   private saveExcersize(excersize: Excersize) {
-    this.db.collection(AppCollections.FINISHED_EXCERSIZES).add(excersize);
-  }
-
-  cancelSubscriptions(): void {
-    this._fbSubscriptions.forEach(sub => sub.unsubscribe());
+    this.store.select(fromRoot.getUser)
+      .pipe(take(1))
+      .subscribe(({ userId }) => {
+        this.db.doc(`users/${ userId }`)
+          .collection(AppCollections.FINISHED_EXCERSIZES)
+          .add(excersize);
+      }, (error) => this.baseError(error));
   }
 }

@@ -1,6 +1,7 @@
 const enum AppCollections {
     AVAILABLE_EXCERSIZES = 'availableExcersizes',
-    FINISHED_EXCERSIZES = 'finishedExcersizes'
+    FINISHED_EXCERSIZES = 'finishedExcersizes',
+    USERS = 'users'
 }
 
 export { AppCollections };

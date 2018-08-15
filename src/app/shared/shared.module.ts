@@ -6,8 +6,10 @@ import { FormsModule } from '@angular/forms';
 
 import { UIService } from '../shared/ui.service';
 import { BaseController } from './baseClasses/baseController';
+import { BaseService } from './baseClasses/baseService';
 
 export {
+  BaseService,
   BaseController,
   UIService
 };

@@ -24,7 +24,7 @@ export class LoginComponent extends BaseController implements OnInit {
 
   ngOnInit(): void {
     this.baseInit();
-
+    this.authService.baseInit();
     this.authService.logout();
   }
 

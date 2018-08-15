@@ -37,21 +37,21 @@ export class TrainingCurrentComponent implements OnInit {
     this.store.select(fromTraining.getActiveExcersize)
       .pipe(take(1))
       .subscribe(excersize => {
-      this.isStopped = false;
-      const step = excersize.duration / 100 * 1000;
+        this.isStopped = false;
+        const step = excersize.duration / 100 * 1000;
 
-      this.timer = window.setInterval(() => {
-        if (this.progress >= 100 || this.isStopped) {
-          clearInterval(this.timer);
-        } else {
-          this.progress += 1;
+        this.timer = window.setInterval(() => {
+          if (this.progress >= 100 || this.isStopped) {
+            clearInterval(this.timer);
+          } else {
+            this.progress += 1;
 
-          if (this.progress >= 100) {
-            this.buttonText = ButtonState.Done;
+            if (this.progress >= 100) {
+              this.buttonText = ButtonState.Done;
+            }
           }
-        }
-      }, step);
-    });
+        }, step);
+      });
   }
 
   buttonClick() {

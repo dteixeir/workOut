@@ -8,18 +8,19 @@ const initialState: State = {
   isAuthenticated: false
 };
 
-export function uiReducer(state: State = initialState, action: AuthActions) {
+export function reducer(state: State = initialState, action: AuthActions) {
   switch (action.type) {
     case AuthActionTypes.SET_AUTHENTICATED:
-      return { isAuthenticated: true };
+      return {
+        ...state,
+        isAuthenticated: true
+      };
 
     case AuthActionTypes.SET_UNAUTHENTICATED:
-      return { isAuthenticated: false };
-
-    // case AuthActionTypes.REGISTER:
-    //   return {
-    //     isAuthenticated: false
-    //   };
+      return {
+        ...state,
+        isAuthenticated: false
+      };
 
     default:
       return { ...state };
