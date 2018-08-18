@@ -11,6 +11,9 @@ import * as fromRoot from '../../app.reducer';
   styleUrls: [ './login.component.scss' ]
 })
 export class LoginComponent extends BaseController implements OnInit {
+  email = 'test@test.com';
+  password = '123123';
+
   constructor(
     private authService: AuthService,
     protected uiService: UIService,

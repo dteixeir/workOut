@@ -9,29 +9,27 @@
     <mat-form-field>
       <input 
         matInput 
-        ngModel 
+        [(ngModel)]="email"
         required
         email
         name="email" 
         type="email" 
         placeholder="Email"
-        #emailInput="ngModel"
       >
-        <mat-error *ngIf="emailInput.hasError('required')">Input required</mat-error>
-        <mat-error *ngIf="!emailInput.hasError('required')">Email is invalid.</mat-error>
+        <!-- <mat-error *ngIf="emailInput.hasError('required')">Input required</mat-error>
+        <mat-error *ngIf="!emailInput.hasError('required')">Email is invalid.</mat-error> -->
       </mat-form-field>
     <mat-form-field>
       <input 
         matInput 
-        ngModel 
+        [(ngModel)]="password" 
         required
         name="password" 
         type="password" 
         placeholder="Password"
         minlength="6"
-        #passwordInput="ngModel"
       >
-        <mat-error>Password must be at least 6 characters long. {{passwordInput.value?.length}} / 6</mat-error>
+        <!-- <mat-error>Password must be at least 6 characters long. {{passwordInput.value?.length}} / 6</mat-error> -->
     </mat-form-field>
     <button *ngIf="!(isLoading$ | async)" mat-raised-button color='primary' type="submit" [disabled]="form.invalid">
       Submit
